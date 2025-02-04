@@ -51,7 +51,7 @@ function Framework.giveVehicle(src, props, stored, class)
         MySQL.insert('INSERT INTO `owned_vehicles` (owner, plate, vehicle, stored) VALUES (?, ?, ?, ?)',
             { identifier, props.plate, json.encode(props), stored })
         return true
-    elseif QB then
+    elseif QB or QBX then
         MySQL.insert(
             'INSERT INTO player_vehicles (license, citizenid, vehicle, hash, mods, plate, state, garage) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
             { identifier, playerData.citizenid, props.model, GetHashKey(props.model), json.encode(props), props.plate,

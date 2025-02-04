@@ -1,11 +1,11 @@
-local Client   = {}
-local Config   = require "modules.client.cl-config"
-local Utils    = require "modules.client.cl-utils"
-local Cam      = require "modules.client.cl-cam"
-local Shared   = require "shared"
+local Client     = {}
+local Config     = require "modules.client.cl-config"
+local Utils      = require "modules.client.cl-utils"
+local Cam        = require "modules.client.cl-cam"
+local Shared     = require "shared"
 
-VehiclePrewiew = nil
-
+VehiclePrewiew   = nil
+VehicleTestDrive = nil
 
 local function getIconForClass(className)
     local icons = Config.IconClass
@@ -107,7 +107,7 @@ function Client.handleTestDrive(vehicle, data)
 
     Client.deleteVehiclePrew()
 
-    local vehicleInstance = Utils.createVehicle({
+    VehicleTestDrive = Utils.createVehicle({
         model = vehicle.Hash,
         position = data.Position,
         networked = true,
@@ -116,9 +116,9 @@ function Client.handleTestDrive(vehicle, data)
         plate = Config.plateVehiclePreview
     })
 
-    if not vehicleInstance then return end
+    if not VehicleTestDrive then return end
 
-    TaskWarpPedIntoVehicle(cache.ped, vehicleInstance, -1)
+    TaskWarpPedIntoVehicle(cache.ped, VehicleTestDrive, -1)
     Wait(1000)
     Utils.startTestDriveTimer(data.Duration)
     Utils.doScreenFade("in", 1000)
@@ -126,14 +126,16 @@ function Client.handleTestDrive(vehicle, data)
     SetTimeout(data.Duration, function()
         Utils.doScreenFade("out", 1000)
         Wait(1000)
-        DeleteEntity(vehicleInstance)
+        DeleteEntity(VehicleTestDrive)
         SetEntityCoords(cache.ped, data.Position.x, data.Position.y, data.Position.z, false, false, false, false)
         Wait(500)
         Utils.doScreenFade("in", 1000)
+        VehicleTestDrive = nil
     end)
 end
 
-function Client.handleVehiclePrev(vehicle, spawnPosition)
+function Client.handleVehiclePrev(vehicle, spawnPosition, zoneID)
+    local zoneData = Config.Zones[zoneID]
     Client.deleteVehiclePrew()
     VehiclePrewiew = Utils.createVehicle({
         model = vehicle.Hash,
@@ -144,7 +146,8 @@ function Client.handleVehiclePrev(vehicle, spawnPosition)
         plate = Config.plateVehiclePreview
     })
     if Cam.ExistCam() then return end
-    Cam.StartCamera(VehiclePrewiew, 6.0, 0.7, true)
+
+    Cam.StartCamera(VehiclePrewiew, zoneData.CamParams.Distance, zoneData.CamParams.Height, true)
 end
 
 function Client.handleBuyVehicle(vehicle, spawnPos, zoneID)
@@ -226,7 +229,7 @@ function Client.createVehicleActionMenu(vehicle, zoneID)
             onSelect = function()
                 local spawnPosPreview = zoneData.SpawnPosition.VehiclePrewiew[vehicleType]
                 Client.deleteVehiclePrew()
-                Client.handleVehiclePrev(vehicle, spawnPosPreview)
+                Client.handleVehiclePrev(vehicle, spawnPosPreview, zoneID)
             end
         },
         {

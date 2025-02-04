@@ -170,6 +170,11 @@ AddEventHandler("onResourceStop", function(res)
         end
 
         Client.deleteVehiclePrew()
+
+
+        if DoesEntityExist(VehicleTestDrive) then
+            DeleteEntity(VehicleTestDrive)
+        end
     end
 end)
 

@@ -1,6 +1,10 @@
+lib.versionCheck('ENT510/LGF_VehicleShop')
+
 local Config = {}
 
 Config.addKeyOnBuy = true
+
+Config.moneyItem = "money"
 
 Config.exportAddVehicleKey = function(netid, plate)
     local vehicle = NetworkGetEntityFromNetworkId(netid)

@@ -13,6 +13,17 @@ function Zone.createZone(zoneID)
     if zoneData then
         local pedZone = zoneData.PedZone
         Zone.initializeZone(zoneID, pedZone)
+
+        local blipData = zoneData.Blip
+        if blipData and blipData.Enable then
+            Utils.createBlip({
+                coords = { x = pedZone.Position.x, y = pedZone.Position.y, z = pedZone.Position.z },
+                sprite = blipData.Sprite,
+                name = blipData.Label,
+                scale = blipData.Scale,
+                color = blipData.Color,
+            })
+        end
     end
 end
 

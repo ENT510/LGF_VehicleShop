@@ -112,7 +112,8 @@ function Client.handleTestDrive(vehicle, data)
         position = data.Position,
         networked = true,
         invincible = false,
-        freeze = false
+        freeze = false,
+        plate = Config.plateVehiclePreview
     })
 
     if not vehicleInstance then return end
@@ -139,7 +140,8 @@ function Client.handleVehiclePrev(vehicle, spawnPosition)
         position = spawnPosition,
         networked = true,
         invincible = true,
-        freeze = true
+        freeze = true,
+        plate = Config.plateVehiclePreview
     })
     if Cam.ExistCam() then return end
     Cam.StartCamera(VehiclePrewiew, 6.0, 0.7, true)
@@ -174,7 +176,8 @@ function Client.handleBuyVehicle(vehicle, spawnPos, zoneID)
         position = spawnPos,
         networked = true,
         invincible = false,
-        freeze = false
+        freeze = false,
+        plate = false,
     })
 
     exports.LGF_UiPack:hideContextMenu()
@@ -188,8 +191,11 @@ function Client.handleBuyVehicle(vehicle, spawnPos, zoneID)
     })
 
     if success then
+        Utils.doScreenFade("out", 1000)
+        Wait(1000)
         TaskWarpPedIntoVehicle(cache.ped, vehicleBuyed, -1)
-
+        Wait(500)
+        Utils.doScreenFade("in", 1000)
         Shared.notify("Success", "You have successfully purchased the vehicle!", "success")
     else
         DeleteEntity(vehicleBuyed)
@@ -199,7 +205,6 @@ end
 function Client.createVehicleActionMenu(vehicle, zoneID)
     local zoneData = Config.Zones[zoneID]
     local haveMoney = exports.ox_inventory:GetItemCount("money") >= vehicle.Price
-
     local vehicleType = Utils.getVehicleType(vehicle.Hash)
 
     local actionOptions = {
@@ -210,7 +215,6 @@ function Client.createVehicleActionMenu(vehicle, zoneID)
             description = 'Test the vehicle in a temporary environment.',
             onSelect = function()
                 local spawnPosTestDrive = zoneData.SpawnPosition.TestDrive[vehicleType]
-
                 Client.handleTestDrive(vehicle, spawnPosTestDrive)
             end
         },
@@ -222,20 +226,17 @@ function Client.createVehicleActionMenu(vehicle, zoneID)
             onSelect = function()
                 local spawnPosPreview = zoneData.SpawnPosition.VehiclePrewiew[vehicleType]
                 Client.deleteVehiclePrew()
-
                 Client.handleVehiclePrev(vehicle, spawnPosPreview)
             end
         },
         {
             id = 'buy',
             title = 'Buy',
-            icon = 'money',
+            icon = 'fa-money-check',
             disabled = not haveMoney,
             description = 'Buy the vehicle for your collection.',
             onSelect = function()
                 local spawnPosBuy = zoneData.SpawnPosition.VehicleBuyed[vehicleType]
-
-
                 Client.handleBuyVehicle(vehicle, spawnPosBuy, zoneID)
             end
         }
@@ -243,7 +244,7 @@ function Client.createVehicleActionMenu(vehicle, zoneID)
 
     local context = exports.LGF_UiPack:registerContextMenu({
         id = ('vehicle-action-%s'):format(vehicle.Label),
-        title = ('Action for %s'):format(vehicle.Label),
+        title = ('%s'):format(vehicle.Label),
         options = actionOptions,
         enableCloseButton = false,
     })

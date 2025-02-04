@@ -145,7 +145,7 @@ function Client.handleVehiclePrev(vehicle, spawnPosition, zoneID)
         freeze = true,
         plate = Config.plateVehiclePreview
     })
-    if Cam.ExistCam() then return end
+    -- if Cam.ExistCam() then return end
 
     Cam.StartCamera(VehiclePrewiew, zoneData.CamParams.Distance, zoneData.CamParams.Height, true)
 end

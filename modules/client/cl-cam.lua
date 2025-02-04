@@ -35,9 +35,9 @@ function Cam.StartCamera(vehicle, distance, height, pointEntity, offset)
 
     SetCamUseShallowDofMode(newCam, true)
     SetCamNearDof(newCam, 1.2)
-    SetCamFarDof(newCam, 12.0)
+    SetCamFarDof(newCam, 22.0)
     SetCamDofStrength(newCam, 1.0)
-    SetCamDofMaxNearInFocusDistance(newCam, 1.0)
+    SetCamDofMaxNearInFocusDistance(newCam, 22.0)
 
     SetFocusEntity(vehicle)
     SetFocusArea(coords.x, coords.y, coords.z, 1.0, 1.0)

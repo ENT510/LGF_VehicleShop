@@ -4,6 +4,8 @@ local QB = GetResourceState('qb-core'):find('start') and exports['qb-core']:GetC
 local Legacy = GetResourceState('LEGACYCORE'):find('start') and exports.LEGACYCORE:GetCoreData() or nil
 local Ox = GetResourceState('ox_core'):find('start') and require '@ox_core/lib/init' or nil
 local QBX = GetResourceState('qbx_core'):find('start') and exports['qb-core']:GetCoreObject() or nil
+local Ndcore = GetResourceState('ND_Core'):find('start') and require '@ND_Core/init.lua' or nil
+
 
 function Framework.getPlayer()
     if Legacy then
@@ -26,6 +28,10 @@ function Framework.getPlayer()
         local OxPlayer = Ox.GetPlayer()
         if not OxPlayer then return nil end
         return OxPlayer
+    elseif Ndcore then
+        local Player = Ndcore.getPlayer()
+        if not Player then return nil end
+        return Player
     end
 end
 
@@ -59,7 +65,13 @@ function Framework.getPlayerJobAndGrade()
             data.JobName = JobName
             data.JobGrade = JobGrade
         end
+    elseif Ndcore then
+        if playerData.job and playerData.jobInfo then
+            data.JobName = playerData.job
+            data.JobGrade = playerData.jobInfo.rank
+        end
     end
+
 
     return data
 end

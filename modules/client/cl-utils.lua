@@ -54,5 +54,45 @@ function Utils.createVehicle(data)
     return vehicle
 end
 
+function Utils.startTestDriveTimer(duration)
+    local startTime = GetGameTimer()
+    local endTime = startTime + duration
+
+    local function x___timer()
+        local currentTime = GetGameTimer()
+        local timeLeft = math.max(0, endTime - currentTime)
+        local secondsLeft = math.floor(timeLeft / 1000)
+
+
+        exports.LGF_UiPack:showTextUi({
+            title = "Test Drive Active",
+            message = "Test the Vehicle before the time runs out.",
+            binder = ("%02d"):format(secondsLeft),
+            position = "right",
+            backgroundColor = "rgba(31, 41, 55, 0.9)"
+        })
+
+
+        if timeLeft <= 0 then
+            exports.LGF_UiPack:hideTextUi()
+            return
+        end
+
+
+        SetTimeout(1000, x___timer)
+    end
+
+    x___timer()
+end
+
+function Utils.doScreenFade(type, time)
+    if type == "in" then
+        DoScreenFadeIn(time)
+        while not IsScreenFadedIn() do Wait(10) end
+    elseif type == "out" then
+        DoScreenFadeOut(time)
+        while not IsScreenFadedOut() do Wait(10) end
+    end
+end
 
 return Utils

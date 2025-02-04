@@ -4,6 +4,8 @@ local QB = GetResourceState('qb-core'):find('start') and exports['qb-core']:GetC
 local Legacy = GetResourceState('LEGACYCORE'):find('start') and exports.LEGACYCORE:GetCoreData() or nil
 local Ox = GetResourceState('ox_core'):find('start') and require '@ox_core/lib/init' or nil
 local QBX = GetResourceState('qbx_core'):find('start') and exports['qb-core']:GetCoreObject() or nil
+local Ndcore = GetResourceState('ND_Core'):find('start') and require '@ND_Core/init.lua' or nil
+
 
 function Framework.getPlayerData(src)
     if Legacy then
@@ -30,6 +32,10 @@ function Framework.getPlayerData(src)
         local OxPlayer = Ox.GetPlayer(src)
         if not OxPlayer then return end
         return OxPlayer
+    elseif Ndcore then
+        local NdPlayer = Ndcore.getPlayer(src)
+        if not NdPlayer then return end
+        return NdPlayer
     end
 end
 
@@ -41,6 +47,8 @@ function Framework.getIdentifier(src)
         return PlayerData.identifier
     elseif QB or QBX then
         return PlayerData.license
+    elseif Ndcore then
+        return PlayerData.getLicense("identifier")
     end
 end
 
@@ -51,7 +59,7 @@ function Framework.giveVehicle(src, props, stored, class)
         MySQL.insert('INSERT INTO `owned_vehicles` (owner, plate, vehicle, stored) VALUES (?, ?, ?, ?)',
             { identifier, props.plate, json.encode(props), stored })
         return true
-    elseif QB or QBX then
+    elseif QB then
         MySQL.insert(
             'INSERT INTO player_vehicles (license, citizenid, vehicle, hash, mods, plate, state, garage) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
             { identifier, playerData.citizenid, props.model, GetHashKey(props.model), json.encode(props), props.plate,
@@ -69,6 +77,10 @@ function Framework.giveVehicle(src, props, stored, class)
         MySQL.insert(
             'INSERT INTO `vehicles` (plate, vin, owner, model, class, data, stored) VALUES (?, ?, ?, ?, ?, ?, ?)',
             { props.plate, vin, xPlayer.charId, props.model, class, json.encode(props), "A" })
+        return true
+    elseif Ndcore then
+        local nd_p = Framework.getPlayerData(src)
+        nd_p.setVehicleOwned(src, props, stored)
         return true
     end
 end

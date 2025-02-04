@@ -13,14 +13,14 @@ Config.IconClass = {
 
 -- Notification Provider For action
 Config.ProviderNotification = "lgf_duipack" -- <"lgf_duipack" or "ox_lib">
--- Add your Custom Interaction on "modules.client.cl-interaction.lua"
-Config.InteractionSystem = "ox_target"
+
+Config.InteractionSystem = "ox_target" -- "textui" or "ox_target"
 
 Config.Zones = {
     ["zone1"] = {
         PedZone = { Position = vector4(-52.3086, -1098.7841, 25.4223, 286.2565), Model = "a_m_m_business_01", Scenario = "WORLD_HUMAN_STAND_IMPATIENT" },
         Jobs = { OnlyJob = false, RequiredJob = "unemployed", RequiredGradeJob = 3 },
-        SpawnPosition = {
+        SpawnPosition = { -- NORE: OneSync limit is 424 units around a player
             VehiclePrewiew = {
                 ["normal"] = vec4(-42.5776, -1098.4122, 26.1519, 92.9815),
                 -- ["boat"] = vec4(),
@@ -32,7 +32,7 @@ Config.Zones = {
                 -- ["aircraft"] = vec4()
             },
             TestDrive      = { -- Same logic for Test Drive
-                ["normal"] = { Position = vec4(-30.4238, -1090.0797, 26.1519, 337.8634), Duration = 3000 },
+                ["normal"] = { Position = vec4(-30.4238, -1090.0797, 26.1519, 337.8634), Duration = 60000 },
                 -- ["aircraft"] = {
                 --     Position = vec4(),
                 -- },
@@ -81,9 +81,6 @@ Config.Zones = {
             { Label = "Nightblade",                Hash = "nightblade", Price = 30000, Class = "Motorcycle", Description = "A powerful motorcycle with a custom look and feel." },
             { Label = "Ruffian",                   Hash = "ruffian",    Price = 24000, Class = "Motorcycle", Description = "A tough and rugged motorcycle, ideal for tough conditions." },
 
-            { Label = "Dinka Marquis",             Hash = "marquis",    Price = 35000, Class = "Boat",       Description = "A fast and stylish speedboat perfect for the open water." },
-            { Label = "Pegassi Speeder",           Hash = "speeder",    Price = 40000, Class = "Boat",       Description = "A luxurious and high-performance speedboat." },
-            { Label = "Nautilus",                  Hash = "nautilus",   Price = 50000, Class = "Boat",       Description = "A top-of-the-line luxury yacht with ample space and style." }
         },
 
     }

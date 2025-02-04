@@ -47,12 +47,7 @@ function Client.createClassMenu(groupedVehicles, zoneID)
             title = className,
             icon = icon,
             description = ('%s class'):format(className),
-            metadata = {
-                TotalCount = #_,
-                className = className,
-                zoneID = zoneID,
 
-            },
             onSelect = function()
                 Client.createVehicleMenu(groupedVehicles[className], className, zoneID)
             end
@@ -103,9 +98,14 @@ function Client.createVehicleMenu(vehiclesInClass, className, zoneID)
 end
 
 function Client.handleTestDrive(vehicle, data)
-    Client.deleteVehiclePrew()
-    if Cam.ExistCam() then Cam.DestroyCamera() end
+    Utils.doScreenFade("out", 1000)
+
     exports.LGF_UiPack:hideContextMenu()
+    if Cam.ExistCam() then Cam.DestroyCamera() end
+    Wait(1000)
+
+
+    Client.deleteVehiclePrew()
 
     local vehicleInstance = Utils.createVehicle({
         model = vehicle.Hash,
@@ -115,12 +115,20 @@ function Client.handleTestDrive(vehicle, data)
         freeze = false
     })
 
-    Wait(200)
+    if not vehicleInstance then return end
+
     TaskWarpPedIntoVehicle(cache.ped, vehicleInstance, -1)
+    Wait(1000)
+    Utils.startTestDriveTimer(data.Duration)
+    Utils.doScreenFade("in", 1000)
 
     SetTimeout(data.Duration, function()
+        Utils.doScreenFade("out", 1000)
+        Wait(1000)
         DeleteEntity(vehicleInstance)
         SetEntityCoords(cache.ped, data.Position.x, data.Position.y, data.Position.z, false, false, false, false)
+        Wait(500)
+        Utils.doScreenFade("in", 1000)
     end)
 end
 

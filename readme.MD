@@ -1,3 +1,6 @@
+![GitHub Downloads](https://img.shields.io/github/downloads/ENT510/LGF_VehicleShop/total?logo=github)
+![GitHub Release](https://img.shields.io/github/v/release/ENT510/LGF_VehicleShop?logo=github)
+
 # LGF_VehicleShop
 
 ## Overview

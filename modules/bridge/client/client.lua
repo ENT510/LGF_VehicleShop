@@ -4,8 +4,7 @@ local QB = GetResourceState('qb-core'):find('start') and exports['qb-core']:GetC
 local Legacy = GetResourceState('LEGACYCORE'):find('start') and exports.LEGACYCORE:GetCoreData() or nil
 local Ox = GetResourceState('ox_core'):find('start') and require '@ox_core/lib/init' or nil
 local QBX = GetResourceState('qbx_core'):find('start') and exports['qb-core']:GetCoreObject() or nil
-local Ndcore = GetResourceState('ND_Core'):find('start') and require '@ND_Core/init.lua' or nil
-
+local Ndcore = GetResourceState('ND_Core'):find('start') and exports["ND_Core"]:GetCoreObject() or nil
 
 function Framework.getPlayer()
     if Legacy then
